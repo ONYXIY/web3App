@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "3EaWDhRU5nA=",
+  "success": true,
+  "projectFilePath": "E:\\web3App\\web3-backend\\web3-backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\XD\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\XD\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

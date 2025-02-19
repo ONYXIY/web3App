@@ -1,0 +1,29 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+  border-radius: 0 0 5px 5px;
+
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.01));
+  backdrop-filter: blur(6px);
+  transition: background 0.5s, backdrop-filter 0.5s; // общее время 0.5s
+
+  &:hover {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.05));
+    transition: background 0.3s, backdrop-filter 0.3s; // здесь 0.3s
+  }
+}
+
+.header.scrolled {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.01));
+  backdrop-filter: blur(2px);
+
+  &:hover {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.05));
+    transition: background 0.3s, backdrop-filter 0.3s;
+  }
+}

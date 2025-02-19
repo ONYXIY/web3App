@@ -1,0 +1,6 @@
+@web3_backend_HostAddress = http://localhost:5184
+
+GET {{web3_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,54 @@
+# ===========  Общие  ===========
+.DS_Store
+Thumbs.db
+*.log
+
+# ===========  Node / Angular  ===========
+node_modules/
+dist/
+tmp/
+out-tsc/
+/.angular/
+*.json
+npm-debug.log
+yarn-error.log
+
+# IDE
+.vscode/
+.idea/
+
+# ===========  .NET / C# ===========
+bin/
+obj/
+*.user
+*.suo
+*.csproj.user
+*.swp
+*.vbproj.user
+*.pdb
+*.mdb
+*.ilk
+*.meta
+*.aps
+*.resz
+*.resources
+*.lck
+*.exe
+*.dll
+*.com
+*.bat
+*.log
+
+# Visual Studio Code .NET debug store
+.vs/
+
+# ASP.NET Identity, NuGet packages, etc
+*.nupkg
+*.snk
+*.props
+*.targets
+
+# JetBrains Rider files
+.idea/
+*.sln.iml
+

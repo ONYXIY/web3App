@@ -1,0 +1,33 @@
+<div class="connect-wallet-btn-container">
+  <!-- Если не подключено, показываем "Connect wallet" -->
+  <button *ngIf="!profile.isConnected"
+          class="btn"
+          (click)="openWalletModal()">
+    Connect wallet
+  </button>
+
+  <!-- Если уже подключено, показываем имя+баланс и выпадающее меню -->
+  <div *ngIf="profile.isConnected" class="profile-box">
+    <div class="profile-info" (click)="toggleMenu()">
+      {{ shortName }}
+      <span *ngIf="profile.balance">({{ profile.balance }} SOL)</span>
+    </div>
+    <div class="menu" *ngIf="showMenu">
+      <div class="menu-item" (click)="copyAddress()">Copy Address</div>
+      <div class="menu-item" (click)="openProfileDrawer()">Edit Profile</div>
+      <div class="menu-item" (click)="disconnect()">Disconnect</div>
+    </div>
+  </div>
+
+  <!-- Классическая полноэкранная модалка выбора кошелька -->
+  <app-select-wallet-modal
+    [showModal]="showWalletModal"
+    (closeModal)="closeWalletModal()">
+  </app-select-wallet-modal>
+
+  <!-- Боковая панель Edit Profile -->
+  <app-edit-profile-modal
+    [showModal]="showProfileDrawer"
+    (closeModal)="closeProfileDrawer()">
+  </app-edit-profile-modal>
+</div>

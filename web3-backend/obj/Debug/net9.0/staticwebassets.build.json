@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "RHYqKEf4d+tnLO8elDubCHFRjhSDdqF7MrGGEfOC70M=",
+  "Source": "web3-backend",
+  "BasePath": "_content/web3-backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

@@ -8,9 +8,12 @@
       <p>Choose one of the installed Solana wallets:</p>
       <div *ngFor="let w of wallets" class="wallet-item">
         <button [class.disabled]="!w.installed" (click)="connect(w)">
-          <img *ngIf="w.icon" [ngSrc]="w.icon" width="24" height="24" alt="" class="icon" />
+          <img *ngIf="w.icon" [ngSrc]="w.icon" width="24" height="24" alt="" class="icon"/>
           <span>{{ w.name }}</span>
-          <span class="badge" [class.installed]="w.installed" [class.not-installed]="!w.installed">
+          <span
+            class="badge"
+            [class.installed]="w.installed"
+            [class.not-installed]="!w.installed">
             {{ w.installed ? 'Installed' : 'Not installed' }}
           </span>
         </button>

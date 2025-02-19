@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Web3Service, DetectedWallet } from '../../services/web3/web3.service';
 import { Subscription } from 'rxjs';
@@ -6,11 +6,11 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-select-wallet-modal',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage ],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './select-wallet-modal.component.html',
   styleUrls: ['./select-wallet-modal.component.scss']
 })
-export class SelectWalletModalComponent implements OnInit {
+export class SelectWalletModalComponent implements OnInit, OnDestroy {
   @Input() showModal = false;
   @Output() closeModal = new EventEmitter<void>();
 
@@ -35,7 +35,7 @@ export class SelectWalletModalComponent implements OnInit {
         this.loading = false;
         this.close();
       },
-      error: () => {
+      error: (err: any) => {
         this.loading = false;
       }
     });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, from, of, switchMap, map, catchError, tap} from 'rxjs';
+import { BehaviorSubject, from, of, switchMap, map, catchError } from 'rxjs';
 import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
 
 export interface Web3Profile {
@@ -43,6 +43,7 @@ export class Web3Service {
   }
 
   private detectWallets() {
+
     const phantomInstalled = !!window.solana?.isPhantom;
     this.detectedWallets.push({
       name: 'Phantom',
@@ -57,7 +58,7 @@ export class Web3Service {
     }
     this.detectedWallets.push({
       name: 'ByBit',
-      icon: 'app/assets/wallets/bybit-wallet.svg',
+      icon: 'assets/wallets/bybit-wallet.svg',
       installed: bybitInstalled,
       connect: () => this.connectByBit()
     });
@@ -97,16 +98,17 @@ export class Web3Service {
 
   private connectByBit() {
     if (!window.bybitWallet?.solana) {
-      console.log('GG')
       return of(null);
     }
     return from(window.bybitWallet.solana.connect()).pipe(
-      tap({
-        next: pk => console.log('ByBit connect result:', pk),
-        error: err => console.log('ByBit connect error:', err)
-      }),
-      switchMap((publicKey: any) => {
-        const address = publicKey?.toBase58() || null;
+      switchMap((pk: any) => {
+        let address: string | null = null;
+
+        if (typeof pk.publicKey === 'string') {
+          address = pk.publicKey;
+        } else if (pk.publicKey?.toBase58) {
+          address = pk.publicKey.toBase58();
+        }
         return this.updateProfile({ walletName: 'ByBit', address });
       })
     );
@@ -148,6 +150,7 @@ export class Web3Service {
       this.saveToStorage(empty);
       return of(null);
     }
+
     return this.getSolBalance(params.address).pipe(
       map((balanceSol: string) => {
         const prev = this.profileSubject.value;
@@ -169,10 +172,18 @@ export class Web3Service {
     try {
       const pubKey = new PublicKey(address);
       return from(this.solConnection.getBalance(pubKey)).pipe(
-        map((lamports: number) => (lamports / 1_000_000_000).toFixed(4)),
-        catchError(() => of('0'))
+        map((lamports: number) => {
+          const sol = lamports / 1_000_000_000;
+          const solStr = sol.toFixed(4);
+          return solStr;
+        }),
+        catchError(err => {
+          console.log('[Web3Service] getSolBalance error:', err);
+          return of('0');
+        })
       );
-    } catch {
+    } catch (err) {
+      console.log('[Web3Service] Invalid address or error constructing PublicKey:', err);
       return of('0');
     }
   }
@@ -211,13 +222,14 @@ export class Web3Service {
     try {
       const data = JSON.parse(raw) as Web3Profile;
       if (data.address && data.walletName) {
-        this.profileSubject.next({
+        const restored = {
           ...data,
           isConnected: true
-        });
+        };
+        this.profileSubject.next(restored);
       }
-    } catch {
-      // ignore parse errors
+    } catch (err) {
+      console.log('[Web3Service] parse error in loadFromStorage:', err);
     }
   }
 }

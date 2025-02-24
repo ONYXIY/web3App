@@ -26,7 +26,6 @@ export class SelectWalletModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Получаем список
     this.wallets = this.web3.getAvailableWallets();
   }
 

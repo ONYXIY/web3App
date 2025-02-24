@@ -15,14 +15,12 @@
             width="24"
             height="24"
             alt=""
-            class="icon"
-          />
+            class="icon"/>
           <span>{{ w.name }}</span>
           <span
             class="badge"
             [class.installed]="w.installed"
-            [class.not-installed]="!w.installed"
-          >
+            [class.not-installed]="!w.installed">
             {{ w.installed ? 'Installed' : 'Not installed' }}
           </span>
         </button>

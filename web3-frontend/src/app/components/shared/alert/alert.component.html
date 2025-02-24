@@ -1,0 +1,29 @@
+<div class="alert-wrapper">
+  <div
+    *ngFor="let alertConfig of alertConfigs; let i = index"
+    class="alert-container"
+    [ngClass]="{ 'visible': alertConfig.visible, 'hide': !alertConfig.visible }">
+
+    <mat-card class="alert-card" [ngClass]="alertConfig.type">
+      <div class="alert-content">
+        <mat-icon *ngIf="alertConfig.type === 'success'">check_circle</mat-icon>
+        <mat-icon *ngIf="alertConfig.type === 'danger'">error</mat-icon>
+        <mat-icon *ngIf="alertConfig.type === 'warning'">warning</mat-icon>
+        <mat-icon *ngIf="alertConfig.type === 'info'">info</mat-icon>
+
+        <span class="alert-text">{{ alertConfig.message }}</span>
+
+        <div *ngIf="!alertConfig.autoClose" class="alert-actions">
+          <button mat-button color="primary" (click)="closeAlert(alertConfig.id)">OK</button>
+        </div>
+      </div>
+
+      <div
+        class="progress-bar"
+        *ngIf="alertConfig.autoClose"
+        [style.animation-duration]="alertConfig.duration + 'ms'">
+      </div>
+    </mat-card>
+
+  </div>
+</div>

@@ -1,4 +1,3 @@
-<!-- .profile-drawer - выезжает справа -->
 <div class="profile-drawer" [class.open]="showModal">
   <div class="drawer-header">
     <h2>Edit Profile</h2>
@@ -6,33 +5,65 @@
   </div>
 
   <div class="drawer-body" *ngIf="profile">
-    <p class="address" (click)="copyAddress()">
-      Address: {{ profile.address }}
+    <p (click)="copyAddress()">
+      Address: <span class="address">{{ profile.address }}</span>
     </p>
     <p class="balance">
       Balance: {{ profile.balance }} SOL
     </p>
 
-    <div class="form-group">
-      <label>Profile Name:</label>
-      <input [(ngModel)]="profileForm.profileName" placeholder="Enter name" />
-    </div>
+    <!-- Кастомный слайдер-таб: на событии переключения вызываем onTabChange -->
+    <app-slider-tab
+      [tabs]="[
+        { label: 'Edit Profile', value: 'edit' },
+        { label: 'Transactions', value: 'tx' }
+      ]"
+      [(selectedTab)]="activeTab"
+      (selectedTabChange)="onTabChange($event)">
+    </app-slider-tab>
 
-    <div class="form-group">
-      <label>Telegram:</label>
-      <input [(ngModel)]="profileForm.telegram" placeholder="Telegram link" />
-    </div>
+    <div [ngSwitch]="activeTab">
+      <!-- Вкладка редактирования профиля -->
+      <ng-container *ngSwitchCase="'edit'">
+        <div class="form-group">
+          <label>Profile Name:</label>
+          <input [(ngModel)]="profileForm.profileName" placeholder="Enter name" />
+        </div>
 
-    <div class="form-group">
-      <label>X link:</label>
-      <input [(ngModel)]="profileForm.x" placeholder="X link" />
-    </div>
+        <div class="form-group">
+          <label>Telegram:</label>
+          <input [(ngModel)]="profileForm.telegram" placeholder="Telegram link" />
+        </div>
 
-    <div class="form-group">
-      <label>Website:</label>
-      <input [(ngModel)]="profileForm.website" placeholder="Website link" />
-    </div>
+        <div class="form-group">
+          <label>X link:</label>
+          <input [(ngModel)]="profileForm.x" placeholder="X link" />
+        </div>
 
-    <button class="save-btn" (click)="saveChanges()">Save</button>
+        <div class="form-group">
+          <label>Website:</label>
+          <input [(ngModel)]="profileForm.website" placeholder="Website link" />
+        </div>
+
+        <button class="save-btn" (click)="saveChanges()">Save</button>
+      </ng-container>
+
+      <!-- Вкладка транзакций -->
+      <ng-container *ngSwitchCase="'tx'">
+        <!-- Если массив транзакций пуст, покажем сообщение -->
+        <div *ngIf="transactions.length === 0">
+          <p>No transactions found or not loaded yet.</p>
+        </div>
+
+        <!-- Иначе выводим список транзакций -->
+        <div *ngFor="let tx of transactions" class="tx-item">
+          <p>Signature: {{ tx.signature }}</p>
+          <p>Slot: {{ tx.slot }}</p>
+          <!-- blockTime хранится в мс, можно применить date-пайп -->
+          <p *ngIf="tx.blockTime">Time: {{ tx.blockTime | date:'medium' }}</p>
+          <p *ngIf="tx.err">Error: {{ tx.err }}</p>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>

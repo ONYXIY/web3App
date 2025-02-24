@@ -1,6 +1,10 @@
 .connect-wallet-btn-container {
   position: relative;
   display: inline-block;
+  &:hover {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+
+  }
 
   .btn {
     background: #333;
@@ -9,8 +13,10 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.3s ease;
     &:hover {
       background: #555;
+      transition: all 0.3s ease;
     }
   }
 

@@ -3,7 +3,6 @@ import { BehaviorSubject, from, of } from 'rxjs';
 import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import {
   Connection,
-  clusterApiUrl,
   PublicKey,
   ConfirmedSignatureInfo,
 } from '@solana/web3.js';
@@ -34,7 +33,7 @@ declare global {
   interface Window {
     solana?: any;
     bybitWallet?: any;
-    ethereum?: any; // ← Добавляем для MetaMask/EVM
+    ethereum?: any;
   }
 }
 
@@ -50,9 +49,7 @@ export class Web3Service {
 
   private detectedWallets: DetectedWallet[] = [];
 
-  // Подключение к Solana RPC
   private solConnection = new Connection('https://rpc.ankr.com/solana', 'confirmed');
-  // private solConnection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
   constructor() {
     this.loadFromStorage();
@@ -60,7 +57,6 @@ export class Web3Service {
   }
 
   private detectWallets() {
-    // ---------- Phantom ----------
     const phantomInstalled = !!window.solana?.isPhantom;
     this.detectedWallets.push({
       name: 'Phantom',
@@ -69,7 +65,6 @@ export class Web3Service {
       connect: () => this.connectPhantom(),
     });
 
-    // ---------- Bybit ----------
     let bybitInstalled = false;
     if (window.bybitWallet && typeof window.bybitWallet.solana !== 'undefined') {
       bybitInstalled = true;
@@ -87,7 +82,6 @@ export class Web3Service {
       connect: () => this.connectByBit(),
     });
 
-    // ---------- Backpack ----------
     const backpackInstalled = !!window.solana?.isBackpack;
     this.detectedWallets.push({
       name: 'Backpack',
@@ -96,7 +90,6 @@ export class Web3Service {
       connect: () => this.connectBackpack(),
     });
 
-    // ---------- Solflare ----------
     const solflareInstalled = !!window.solana?.isSolflare;
     this.detectedWallets.push({
       name: 'Solflare',
@@ -105,7 +98,6 @@ export class Web3Service {
       connect: () => this.connectSolflare(),
     });
 
-    // ---------- MetaMask (Ethereum) ----------
     const metaMaskInstalled = !!window.ethereum?.isMetaMask;
     this.detectedWallets.push({
       name: 'MetaMask (Ethereum)',
@@ -115,14 +107,10 @@ export class Web3Service {
     });
   }
 
-  // Возвращаем все «обнаруженные» кошельки
   public getAvailableWallets(): DetectedWallet[] {
     return this.detectedWallets;
   }
 
-  // ------------------------------------------------------
-  // Подключение MetaMask (Ethereum)
-  // ------------------------------------------------------
   private connectMetaMask() {
     if (!window.ethereum || !window.ethereum.isMetaMask) {
       console.warn('[MetaMask] is not installed or not detected!');
@@ -130,7 +118,6 @@ export class Web3Service {
     }
     console.log('[MetaMask] Trying to connect...');
 
-    // ЯВНО указываем, что результат будет string[]
     return from(window.ethereum.request({method: 'eth_requestAccounts'}) as Promise<string[]>).pipe(
       switchMap((accounts: string[]) => {
         if (!accounts || !accounts.length) {
@@ -140,8 +127,6 @@ export class Web3Service {
         const address = accounts[0];
         console.log('[MetaMask] Connected account:', address);
 
-        // Далее, если нужно переключиться на Ethereum Mainnet (chainId=0x1)
-        // тоже заворачиваем в from(...), чтобы остаться в RxJS-парадигме
         return from(
           window.ethereum.request({
             method: 'wallet_switchEthereumChain',
@@ -150,10 +135,8 @@ export class Web3Service {
         ).pipe(
           catchError((err) => {
             console.error('[MetaMask] chain switch error:', err);
-            // Например, если юзер отменил переключение, просто возвращаем null
             return of(null);
           }),
-          // После переключения сети вызываем наш updateProfileEvm(...)
           switchMap(() => {
             return this.updateProfileEvm({
               walletName: 'MetaMask (Ethereum)',
@@ -165,11 +148,8 @@ export class Web3Service {
     );
   }
 
-  // Дополнительный метод для «EVM профиля»
-  // (Чтобы не смешивать с Solana логикой getSolBalance)
   private updateProfileEvm(params: { walletName: string; address: string }) {
     const { walletName, address } = params;
-    // Допустим, EVM-баланс нам не нужен, оставим "0"
     const evmBalance = '0';
     const prev = this.profileSubject.value;
 
@@ -187,9 +167,6 @@ export class Web3Service {
     return of(address);
   }
 
-  // ------------------------------------------------------
-  // Подключение Phantom (Solana)
-  // ------------------------------------------------------
   private connectPhantom() {
     if (!window.solana?.isPhantom) {
       console.warn('Phantom not installed!');
@@ -207,9 +184,6 @@ export class Web3Service {
     );
   }
 
-  // ------------------------------------------------------
-  // Подключение Bybit (Solana)
-  // ------------------------------------------------------
   private connectByBit() {
     if (!window.bybitWallet || typeof window.bybitWallet.solana === 'undefined') {
       console.log('[Bybit] Wallet not installed or no Solana support');
@@ -245,10 +219,8 @@ export class Web3Service {
         let solAddress: string | null = null;
 
         if (publicKey && typeof publicKey.toBase58 === 'function') {
-          // нормальный случай
           solAddress = publicKey.toBase58();
         } else if (publicKey?.publicKey && typeof publicKey.publicKey.toBase58 === 'function') {
-          // иногда возвращает объект { publicKey: ... }
           solAddress = publicKey.publicKey.toBase58();
         } else {
           console.warn(
@@ -261,9 +233,6 @@ export class Web3Service {
     );
   }
 
-  // ------------------------------------------------------
-  // Подключение Backpack (Solana)
-  // ------------------------------------------------------
   private connectBackpack() {
     if (!window.solana?.isBackpack) {
       console.warn('Backpack not installed or not detected');
@@ -281,9 +250,6 @@ export class Web3Service {
     );
   }
 
-  // ------------------------------------------------------
-  // Подключение Solflare (Solana)
-  // ------------------------------------------------------
   private connectSolflare() {
     if (!window.solana?.isSolflare) {
       console.warn('Solflare not installed or not detected');
@@ -301,9 +267,6 @@ export class Web3Service {
     );
   }
 
-  // ------------------------------------------------------
-  // Обновить профиль (Solana) + запрос SOL баланса
-  // ------------------------------------------------------
   private updateProfile(params: { walletName: string; address: string | null }) {
     console.log('[updateProfile] params =', params);
 
@@ -320,7 +283,6 @@ export class Web3Service {
       return of(null);
     }
 
-    // Запрашиваем баланс в SOL
     return this.getSolBalance(params.address).pipe(
       tap((bal) => {
         console.log(`[updateProfile] SOL balance for ${params.address} = ${bal}`);
@@ -342,7 +304,6 @@ export class Web3Service {
     );
   }
 
-  // Запрос баланса в SOL
   private getSolBalance(address: string) {
     try {
       const pubKey = new PublicKey(address);
@@ -359,7 +320,6 @@ export class Web3Service {
     }
   }
 
-  // Установить имя профиля
   public setProfileName(name: string) {
     const prev = this.profileSubject.value;
     const updated: Web3Profile = {
@@ -370,7 +330,6 @@ export class Web3Service {
     this.saveToStorage(updated);
   }
 
-  // Отключить кошелёк
   public disconnectWallet() {
     console.log('[disconnectWallet]');
     const empty: Web3Profile = {
@@ -384,12 +343,10 @@ export class Web3Service {
     this.saveToStorage(empty);
   }
 
-  // Сохранить профиль в localStorage
   private saveToStorage(profile: Web3Profile) {
     localStorage.setItem('web3-profile', JSON.stringify(profile));
   }
 
-  // Загрузить профиль из localStorage
   private loadFromStorage() {
     const raw = localStorage.getItem('web3-profile');
     if (!raw) {
@@ -404,11 +361,9 @@ export class Web3Service {
         });
       }
     } catch {
-      // ignore parse errors
     }
   }
 
-  // Загрузка последних транзакций (Solana)
   public getTransactionsForAddress(address: string, limit = 10) {
     try {
       const pubKey = new PublicKey(address);

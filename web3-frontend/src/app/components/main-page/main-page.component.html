@@ -1,1 +1,7 @@
 <div>Message from back: {{ (api.data$ | async)?.message }}</div>
+<app-slider-tab
+  [tabs]="mokTabs"
+  [(selectedTab)]="selectedTab"
+></app-slider-tab>
+
+<span>{{selectedTab}}</span>

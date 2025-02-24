@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/ui/header/header.component';
+import { AlertComponent } from './components/shared/alert/alert.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    HeaderComponent
+    HeaderComponent,
+    AlertComponent
   ],
   templateUrl: './app.component.html',
   standalone: true,

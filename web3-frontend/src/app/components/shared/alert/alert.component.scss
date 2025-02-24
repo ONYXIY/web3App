@@ -1,0 +1,114 @@
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  right: 1.25rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: calc(100% - 2.5rem);
+  max-width: 25rem;
+  transition: all 0.5s ease-in-out;
+}
+
+.alert-container {
+  border-radius: 5px;
+  opacity: 0;
+  transform: translateY(-1.25rem);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(-1.25rem);
+  }
+}
+
+.alert-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 1rem;
+  //padding-bottom: 1.75rem;
+
+  display: flex;
+  align-items: center;
+
+  &.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  &.danger {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  &.warning {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+  &.info {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+
+  .alert-text {
+    flex-grow: 1;
+    margin-bottom: 0;
+    font-size: 0.9375rem;
+  }
+}
+
+.alert-actions {
+  button {
+    margin-left: 1rem;
+  }
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0.25rem;
+  width: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  animation: progressBarAnimation linear forwards;
+}
+
+@keyframes progressBarAnimation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .alert-wrapper {
+    top: 4rem;
+    right: 0.625rem;
+    width: calc(100% - 1.25rem);
+    max-width: 100%;
+  }
+
+  .alert-card {
+    padding: 0.625rem;
+    //padding-bottom: 1.25rem;
+    font-size: 0.875rem;
+  }
+}

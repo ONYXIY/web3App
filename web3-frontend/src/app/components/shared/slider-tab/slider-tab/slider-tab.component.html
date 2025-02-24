@@ -1,0 +1,7 @@
+<div class="tabs-header" #tabsHeader>
+  <label *ngFor="let tab of tabs; let i = index"
+         (click)="selectTab(tab.value, i)"
+         [class.active]="selectedTab === tab.value"
+         [class.disabled]="tab.disabled">{{tab.label}}</label>
+  <div class="slider" #slider></div>
+</div>

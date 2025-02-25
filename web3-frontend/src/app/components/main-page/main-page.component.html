@@ -1,7 +1,24 @@
-<div>Message from back: {{ (api.data$ | async)?.message }}</div>
+<div class="video-background">
+  <video
+    #videoRef
+    autoplay
+    muted
+    playsinline>
+    <source src="../../assets/main-video/1033781438-hd.mp4" type="video/mp4" />
+  </video>
+  <canvas #canvasRef></canvas>
+</div>
+
+<div class="backendMessage">Message from back: {{ (api.data$ | async)?.message }}</div>
+
 <app-slider-tab
   [tabs]="mokTabs"
   [(selectedTab)]="selectedTab"
 ></app-slider-tab>
 
 <span>{{selectedTab}}</span>
+
+<div class="welcome-message fade-in">
+  Welcome to Lohcoin
+</div>
+

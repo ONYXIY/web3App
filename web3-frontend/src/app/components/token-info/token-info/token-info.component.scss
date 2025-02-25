@@ -1,0 +1,46 @@
+.token-info-container {
+  position: relative;
+  padding: 50px 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+  overflow: hidden;
+  margin-top: 200px;
+}
+
+.token-info-content {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.8s ease-in-out;
+}
+
+.token-info-content.show-content {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.token-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #6fa3f7; /* Цвет, который похож на логотип */
+}
+
+.token-description {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+ul {
+  margin-top: 20px;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+.token-join {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}

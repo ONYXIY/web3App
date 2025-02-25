@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { Web3Service, Web3Profile, SolanaTransaction } from '../../services/web3/web3.service';
 import { AlertService } from '../../services/alert/alert.service';
 
-// Кастомный слайдер-таб
 import { SliderTabComponent } from '../shared/slider-tab/slider-tab/slider-tab.component';
 
 @Component({
@@ -39,7 +38,6 @@ export class EditProfileModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Подписываемся на обновления профиля
     this.sub = this.web3.profile$.subscribe((p) => {
       this.profile = p;
       if (p?.profileName) {

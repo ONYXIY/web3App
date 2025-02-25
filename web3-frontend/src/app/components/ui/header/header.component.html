@@ -1,3 +1,9 @@
 <div class="header" [class.scrolled]="scrolled">
-  <app-connect-wallet-btn></app-connect-wallet-btn>
+  <img src="assets/logo/lohcoin_round.png" alt="Logo" class="logo">
+
+  <div class="header-buttons">
+    <button mat-raised-button class="dark-button" (click)="openBuyNow()">Buy Now</button>
+    <button mat-raised-button class="dark-button">Install Wallet</button>
+    <app-connect-wallet-btn></app-connect-wallet-btn>
+  </div>
 </div>
